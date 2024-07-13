@@ -53,8 +53,59 @@ function initEvent() {
     $input.addEventListener('keyup', onkeyup);
 }
 
-function onkeydown() { 
+function onkeydown(event) { 
+    const $currentWord = $paragraph.querySelector('word.active')
+    const $currentLetter = $currentWord.querySelector('letter.active')
+    const { key } = event;
+    if (key === ' ') { 
+        // evita reacción ante el espacio
+        event.preventDefault();
 
+        //pasar a la siguiente palabra
+        const $nextWord = $currentWord.nextElementSibling;
+        const $nextLetter = $nextWord.querySelector('letter')
+
+        $currentWord.classList.remove('active', 'marked');
+        $currentLetter.classList.remove('active');
+
+        $nextWord.classList.add('active');
+        $nextLetter.classList.add('active');
+
+        $input.value = '';
+
+        const hasMissedLetter = $currentWord
+            .querySelectorAll('letter:not(.correct)').length > 0
+
+        const classToAd = hasMissedLetter ? 'marked' : 'correct';
+        $currentWord.classList.add(classToAd);
+        return;
+    }
+    if (key === 'Backspace') { 
+        const $prevWord = $currentWord.previousElementSibling;
+        const $prevLetter = $currentLetter.previousElementSibling;
+        if (!$prevWord && !$prevLetter) { 
+            event.preventDefault();
+            return;
+        }
+
+        const $wordMarked = $paragraph.querySelector('word.marked');
+        if ($wordMarked && !$prevLetter) { 
+            event.preventDefault();
+            $prevWord.classList.remove('marked');
+            $prevWord.classList.add('active');
+
+            const $letterToGo = $prevWord.querySelector('letter:last-child');
+
+            $currentLetter.classList.remove('active');
+            $letterToGo.classList.add('active');
+
+            $input.value = [
+                ...$prevWord.querySelectorAll('letter.correct')
+            ].map($el => $el.innerText).join('');
+
+        }
+
+    }
 }
 
 function onkeyup() { 

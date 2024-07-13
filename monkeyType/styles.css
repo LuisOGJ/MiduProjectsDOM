@@ -69,6 +69,14 @@ letter {
     }
 }
 
+word {
+    border-bottom: 2px solid transparent;
+    transition: border-color 0.3s ease-in-out;
+    &.marked {
+        border-color: var(--red);
+    }
+}
+
 @keyframes blink {
     0%, 50% {
         opacity: 1;
