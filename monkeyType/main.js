@@ -1,8 +1,16 @@
+import { words as INITIAL_WORDS} from './data.js'
+
 const $time = document.querySelector('time');
 const $paragraph = document.querySelector('p');
 const $input = document.querySelector('input');
+const $game = document.querySelector('#game');
+const $result = document.querySelector('#results');
+const $wpm = $result.querySelector('#results-wpm');
+const $accuracy = $result.querySelector('#results-accuracy');
+const $button = document.querySelector('#reload-button');
 
-const INITIAL_TIME = 30;
+
+const INITIAL_TIME = 10;
 
 const TEXT = 'the quick brown fox jumps over the lazy dog and luis is trying to clone monkey type for fun and profit using js for the typing test speed'
 
@@ -13,9 +21,13 @@ initGame();
 initEvent();
 
 function initGame() { 
-
+    $game.style.display = 'flex';
+    $result.style.display = 'none';
+    $input.value = '';
     // PRINT GENERAL PARAGRAPH
-    words = TEXT.split(' ').slice(0, 32);
+    words = INITIAL_WORDS.toSorted(
+        () => Math.random() - 0.5
+    ).slice(0, 50);
     currentTime = INITIAL_TIME;
     $time.textContent = currentTime;
     $paragraph.innerHTML = words.map((word, index) => {
@@ -36,8 +48,8 @@ function initGame() {
         $time.textContent = currentTime;
 
         if (currentTime === 0) {
-            clearInterval(intervalId)
-            console.log('Game Over');
+            clearInterval(intervalId);
+            gameOver();
         }
 
     }, 1000);
@@ -51,6 +63,7 @@ function initEvent() {
 
     $input.addEventListener('keydown', onkeydown);
     $input.addEventListener('keyup', onkeyup);
+    $button.addEventListener('click', initGame);
 }
 
 function onkeydown(event) { 
@@ -140,5 +153,23 @@ function onkeyup() {
         // TODO: game over
     }
 
-    $allLetters[inputLength].classList.add('active');
+    //$allLetters[inputLength].classList.add('active');
+}
+
+function gameOver() { 
+    $game.style.display = 'none';
+    $result.style.display = 'flex';
+
+    const correctWords = $paragraph.querySelectorAll('word.correct').length;
+    const correctLetters = $paragraph.querySelectorAll('letter.correct').length;
+    const incorrectLetters = $paragraph.querySelectorAll('letter.incorrect').length;
+
+    const totalLetters = correctLetters + incorrectLetters
+    const accuracy = totalLetters > 0
+        ? (correctLetters / totalLetters) * 100
+        : 0;
+    
+    const wpm = correctWords * 60 / INITIAL_TIME;
+    $wpm.textContent = wpm;
+    $accuracy.textContent = `${accuracy.toFixed(2)}%`;
 }

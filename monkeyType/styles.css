@@ -34,6 +34,7 @@ input {
     top: 0;
     left: 0;
     pointer-events: none;
+    opacity: 0;
 }
 
 p {
@@ -83,5 +84,39 @@ word {
     }
     75% {
         opacity: 0;
+    }
+}
+
+#results {
+    display: none;
+}
+
+h2 {
+    font-weight: 400;
+    opacity: .4;
+    margin: 0;
+    font-size: 16px;
+}
+
+h3{
+    font-weight: 400;
+    margin: 0;
+    font-size: 24px;
+    color: var(--yellow);
+}
+
+button {
+    background: transparent;
+    border: 0;
+    margin-top: 32px;
+    padding: 16px;
+    opacity: .4;
+    display: inline-block;
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+    cursor: pointer;
+    &:hover {
+        /*background: #444;*/
+        opacity: 1;
+        scale: 110%;
     }
 }
