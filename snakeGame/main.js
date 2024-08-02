@@ -52,11 +52,13 @@ const moveSnake = () => {
         Number(snake[snake.length - 1]) + directions[direction]).padStart(2, '0');
     const [row, column] = newSquare.split('');
 
-    if (newSquare < 0 ||
+    let validationMove = newSquare < 0 ||
         newSquare > boardSize * boardSize ||
         (direction === 'ArrowRight' && column == 0) ||
         (direction === 'ArrowLeft' && column == 9) ||
-        boardSquares[row, column] === squareTypes.snakeSquare) {
+        boardSquares[row, column] === squareTypes.snakeSquare;
+
+    if (validationMove) {
         gameOver();
     } else { 
         snake.push(newSquare);
